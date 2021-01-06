@@ -43,8 +43,7 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Services
                 var response = client.GetAsync("https://rt.freshaddress.biz/v7.2?service=react&company=" + _companyId + "&contract=" + _contractId + "&email=" + email).GetAwaiter().GetResult();
                 if (!response.IsSuccessStatusCode)
                 {
-                    var errorContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                    throw new Exception("Error when making GET request to FreshAddress API: " + response.ReasonPhrase.ToString() + " : " + errorContent);
+                    throw new Exception("Error when making GET request to FreshAddress API: " + response.ReasonPhrase.ToString());
                 }
 
                 var content = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();

@@ -8,7 +8,13 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Infrastructure
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public int Order => int.MaxValue;
+        public int Order
+        {
+            get
+            {
+                return int.MaxValue;
+            }
+        }
 
         public void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {

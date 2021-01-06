@@ -2,51 +2,62 @@
 using Nop.Plugin.Misc.FreshAddressIntegration.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Misc.FreshAddressIntegration.Controllers
 {
-    [Area(AreaNames.Admin)]
     [AuthorizeAdmin]
+    [Area(AreaNames.Admin)]
+    [AutoValidateAntiforgeryToken]
     public class FreshAddressIntegrationController : BasePluginController
     {
+        private readonly string CompanyIdSettingKey = "freshaddressintegration.companyid";
+        private readonly string ContractIdSettingKey = "freshaddressintegration.contractid";
         private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
+        private readonly INotificationService _notificationService;
 
-        public FreshAddressIntegrationController(ILocalizationService localizationService, ISettingService settingService)
+        public FreshAddressIntegrationController(
+            ILocalizationService localizationService,
+            ISettingService settingService,
+            INotificationService notificationService
+        )
         {
             _localizationService = localizationService;
             _settingService = settingService;
+            _notificationService = notificationService;
         }
 
-        public ActionResult Configure()
+        public IActionResult Configure()
         {
-            var companyId = _settingService.GetSetting(Constants.CompanyIdSettingKey)?.Value;
-            var contractId = _settingService.GetSetting(Constants.ContractIdSettingKey)?.Value;
+            var companyId = _settingService.GetSetting(CompanyIdSettingKey)?.Value;
+            var contractId = _settingService.GetSetting(ContractIdSettingKey)?.Value;
 
-            var model = new FreshAddressIntegrationModel
-            {
-                CompanyId = companyId,
-                ContractId = contractId
-            };
+            var model = new FreshAddressIntegrationModel();
+            model.CompanyId = companyId;
+            model.ContractId = contractId;
 
-            return View("~/Plugins/Misc.FreshAddressIntegration/Views/Configure.cshtml", model);
+            return View(
+                "~/Plugins/Misc.FreshAddressIntegration/Views/Configure.cshtml",
+                model);
         }
 
         [HttpPost]
-        public ActionResult Configure(FreshAddressIntegrationModel model)
+        public IActionResult Configure(FreshAddressIntegrationModel model)
         {
             if (!ModelState.IsValid)
             {
                 return Configure();
             }
 
-            _settingService.SetSetting(Constants.CompanyIdSettingKey, model.CompanyId);
-            _settingService.SetSetting(Constants.ContractIdSettingKey, model.ContractId);
+            _settingService.SetSetting(CompanyIdSettingKey, model.CompanyId);
+            _settingService.SetSetting(ContractIdSettingKey, model.ContractId);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(
+                _localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }
