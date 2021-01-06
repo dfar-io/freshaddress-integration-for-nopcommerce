@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "FreshAddress Integration",
+  "SystemName": "Misc.FreshAddressIntegration",
+  "Version": "1.0",
+  "SupportedVersions": ["4.00"],
+  "Author": "Dave Farinelli",
+  "DisplayOrder": 0,
+  "FileName": "Nop.Plugin.Misc.FreshAddressIntegration.dll",
+  "Description": "Integrates FreshAddress into nopCommerce."
+}
