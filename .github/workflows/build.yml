@@ -31,7 +31,7 @@ jobs:
       run: dotnet sln NopCommerce.sln add Plugins/Nop.Plugin.Misc.FreshAddressIntegration/Nop.Plugin.Misc.FreshAddressIntegration.csproj
     - name: Install SonarCloud scanner
       run: |
-        mkdir ./.sonar/scanner
+        mkdir -p ./.sonar/scanner
         dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
     - name: Build and analyze
       env:
