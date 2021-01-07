@@ -15,7 +15,7 @@ jobs:
     - name: Download nopCommerce source
       run: |
         wget https://github.com/nopSolutions/nopCommerce/releases/download/release-4.30/nopCommerce_4.30_Source.zip
-        unzip nopCommerce_4.30_Source.zip -d /
+        sudo unzip nopCommerce_4.30_Source.zip -d /
         rm nopCommerce_4.30_Source.zip
     - uses: actions/checkout@v2
       with:
