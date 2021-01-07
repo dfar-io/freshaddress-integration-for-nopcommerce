@@ -1,0 +1,34 @@
+name: Build
+
+on:
+  push:
+    branches: [ '4.30' ]
+  pull_request:
+    branches: [ '4.30' ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download nopCommerce source
+      run: |
+        wget https://github.com/nopSolutions/nopCommerce/releases/download/release-4.30/nopCommerce_4.30_Source.zip
+        unzip nopCommerce_4.30_Source.zip -d /
+        rm nopCommerce_4.30_Source.zip
+    - uses: actions/checkout@v2
+      with:
+        path: Plugins/Nop.Plugin.Misc.FreshAddressIntegration
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Add plugin to nopCommerce source
+      run: dotnet sln NopCommerce.sln add Plugins/Nop.Plugin.Misc.FreshAddressIntegration/Nop.Plugin.Misc.FreshAddressIntegration.csproj
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
