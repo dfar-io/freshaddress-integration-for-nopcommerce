@@ -1,3 +1,6 @@
+![Build](https://github.com/dfar-io/freshaddress-integration-for-nopcommerce/workflows/Build/badge.svg)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dfar-io_freshaddress-integration-for-nopcommerce&metric=alert_status)](https://sonarcloud.io/dashboard?id=dfar-io_freshaddress-integration-for-nopcommerce)
+
 # freshaddress-integration-for-nopcommerce
 Provides integration with FreshAddress (https://www.freshaddress.com/) and nopCommerce (https://www.nopcommerce.com)
 
