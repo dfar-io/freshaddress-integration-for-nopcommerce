@@ -36,6 +36,10 @@ jobs:
     - name: Mark Projects to Skip for Sonar
       run: sh ./sonar-helper.sh
       working-directory: Plugins/Nop.Plugin.Misc.FreshAddressIntegration
+    # for debugging
+    - name: Debug File Contents
+      run: cat Nop.Web.csproj
+      working-directory: Presentation/Nop.Web
     - name: Build and analyze
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
