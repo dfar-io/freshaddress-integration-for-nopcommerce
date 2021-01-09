@@ -34,7 +34,7 @@ jobs:
         mkdir -p ./.sonar/scanner
         dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
     - name: Mark Projects to Skip for Sonar
-      run: sh ./sonar-helper.sh
+      run: ./sonar-helper.sh
       working-directory: Plugins/Nop.Plugin.Misc.FreshAddressIntegration
     # for debugging
     - name: Debug File Contents
