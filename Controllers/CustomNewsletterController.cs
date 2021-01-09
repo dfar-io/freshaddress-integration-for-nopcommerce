@@ -9,6 +9,8 @@ using Nop.Services.Messages;
 using Nop.Web.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using System;
+using System.Configuration;
+using System.Net.Http;
 
 namespace Nop.Plugin.Misc.FreshAddressIntegration.Controllers
 {
@@ -20,7 +22,6 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Controllers
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IStoreContext _storeContext;
-        private readonly CustomerSettings _customerSettings;
         private readonly ILogger _logger;
         private readonly IFreshAddressService _freshAddressService;
 
@@ -29,7 +30,6 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Controllers
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IWorkflowMessageService workflowMessageService,
             IStoreContext storeContext,
-            CustomerSettings customerSettings,
             ILogger logger,
             IFreshAddressService freshAddressService)
         {
@@ -38,7 +38,6 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Controllers
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _workflowMessageService = workflowMessageService;
             _storeContext = storeContext;
-            _customerSettings = customerSettings;
             _logger = logger;
             _freshAddressService = freshAddressService;
         }
@@ -94,7 +93,7 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Controllers
                             });
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception ex) when (ex is HttpRequestException || ex is ConfigurationErrorsException)
                     {
                         _logger.Error($"An error occured while trying to validate a Newsletter signup through FreshAddress: {ex}");
                     }

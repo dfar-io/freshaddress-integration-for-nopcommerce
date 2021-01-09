@@ -4,6 +4,7 @@ using Nop.Plugin.Misc.FreshAddressIntegration.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
 using System;
+using System.Configuration;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -13,25 +14,20 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Services
     {
         private readonly string _companyId;
         private readonly string _contractId;
-        private readonly ILogger _logger;
-        private readonly ISettingService _settingService;
 
         public FreshAddressService(
             ILogger logger,
             ISettingService settingService
             )
         {
-            _logger = logger;
-            _settingService = settingService;
-
-            _companyId = _settingService.GetSetting("freshaddressintegration.companyid")?.Value;
-            _contractId = _settingService.GetSetting("freshaddressintegration.contractId")?.Value;
+            _companyId = settingService.GetSetting("freshaddressintegration.companyid")?.Value;
+            _contractId = settingService.GetSetting("freshaddressintegration.contractId")?.Value;
         }
 
         public FreshAddressResponse ValidateEmail(string email)
         {
-            if (string.IsNullOrWhiteSpace(_companyId)) { throw new Exception("Company ID is null - please provide a Company ID in Configuration Settings."); }
-            if (string.IsNullOrWhiteSpace(_contractId)) { throw new Exception("Contract ID is null - please provide a Contract ID in Configuration Settings."); }
+            if (string.IsNullOrWhiteSpace(_companyId)) { throw new ConfigurationErrorsException("Company ID is null - please provide a Company ID in Configuration Settings."); }
+            if (string.IsNullOrWhiteSpace(_contractId)) { throw new ConfigurationErrorsException("Contract ID is null - please provide a Contract ID in Configuration Settings."); }
 
             return CallFreshAddressAPI(email);
         }
@@ -43,7 +39,7 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Services
                 var response = client.GetAsync("https://rt.freshaddress.biz/v7.2?service=react&company=" + _companyId + "&contract=" + _contractId + "&email=" + email).GetAwaiter().GetResult();
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Error when making GET request to FreshAddress API: " + response.ReasonPhrase.ToString());
+                    throw new HttpRequestException("Error when making GET request to FreshAddress API: " + response.ReasonPhrase.ToString());
                 }
 
                 var content = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
