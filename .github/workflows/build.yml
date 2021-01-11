@@ -28,7 +28,7 @@ jobs:
       with:
         java-version: 1.11
     - name: Add plugin to nopCommerce source
-      run: dotnet sln NopCommerce.sln add Plugins/Nop.Plugin.Misc.FreshAddressIntegration/Nop.Plugin.Misc.FreshAddressIntegration.csproj
+      run: dotnet sln NopCommerce.sln add Plugins/Nop.Plugin.Misc.FreshAddressIntegration/src/Nop.Plugin.Misc.FreshAddressIntegration.csproj
     - name: Install SonarCloud scanner
       run: |
         mkdir -p ./.sonar/scanner
