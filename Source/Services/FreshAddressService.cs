@@ -18,7 +18,7 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Services
         public FreshAddressService(
             ILogger logger,
             ISettingService settingService
-            )
+        )
         {
             _companyId = settingService.GetSetting("freshaddressintegration.companyid")?.Value;
             _contractId = settingService.GetSetting("freshaddressintegration.contractId")?.Value;
