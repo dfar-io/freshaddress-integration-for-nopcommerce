@@ -30,6 +30,7 @@ jobs:
     - name: Add plugin and tests to nopCommerce source
       run: |
         dotnet sln NopCommerce.sln add Plugins/Nop.Plugin.Misc.FreshAddressIntegration/Source/Nop.Plugin.Misc.FreshAddressIntegration.csproj
+        dotnet sln NopCommerce.sln add Plugins/Nop.Plugin.Misc.FreshAddressIntegration/Tests/Nop.Plugin.Misc.FreshAddressIntegration.Tests.csproj
     - name: Install SonarCloud scanner
       run: |
         mkdir -p ./.sonar/scanner
