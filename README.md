@@ -27,7 +27,8 @@ git clone https://github.com/dfar-io/freshaddress-integration-for-nopcommerce.gi
 Finally, add the plugin to the solution and verify a successful build:
 
 ````
-dotnet sln ../NopCommerce.sln add Nop.Plugin.Misc.FreshAddressIntegration/Nop.Plugin.Misc.FreshAddressIntegration.csproj
+dotnet sln ../NopCommerce.sln add Nop.Plugin.Misc.FreshAddressIntegration/Source/Nop.Plugin.Misc.FreshAddressIntegration.csproj
+dotnet sln ../NopCommerce.sln add Nop.Plugin.Misc.FreshAddressIntegration/Tests/Nop.Plugin.Misc.FreshAddressIntegration.Tests.csproj
 cd ..
-dotnet clean && dotnet build
+dotnet clean && dotnet build && dotnet test
 ````

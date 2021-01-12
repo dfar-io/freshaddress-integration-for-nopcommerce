@@ -27,8 +27,10 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.11
-    - name: Add plugin to nopCommerce source
-      run: dotnet sln NopCommerce.sln add Plugins/Nop.Plugin.Misc.FreshAddressIntegration/Nop.Plugin.Misc.FreshAddressIntegration.csproj
+    - name: Add plugin and tests to nopCommerce source
+      run: |
+        dotnet sln NopCommerce.sln add Plugins/Nop.Plugin.Misc.FreshAddressIntegration/Source/Nop.Plugin.Misc.FreshAddressIntegration.csproj
+        dotnet sln NopCommerce.sln add Plugins/Nop.Plugin.Misc.FreshAddressIntegration/Tests/Nop.Plugin.Misc.FreshAddressIntegration.Tests.csproj
     - name: Install SonarCloud scanner
       run: |
         mkdir -p ./.sonar/scanner
@@ -36,10 +38,6 @@ jobs:
     - name: Mark Projects to Skip for Sonar
       run: ./sonar-helper.sh
       working-directory: Plugins/Nop.Plugin.Misc.FreshAddressIntegration
-    # for debugging
-    - name: Debug File Contents
-      run: cat Nop.Web.csproj
-      working-directory: Presentation/Nop.Web
     - name: Build and analyze
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,5 +46,5 @@ jobs:
         ./.sonar/scanner/dotnet-sonarscanner begin /k:"dfar-io_freshaddress-integration-for-nopcommerce" /o:"dfar-io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
         dotnet restore
         dotnet build --no-restore
-        dotnet test --no-build --verbosity normal
+        dotnet test Plugins/Nop.Plugin.Misc.FreshAddressIntegration/Tests/Nop.Plugin.Misc.FreshAddressIntegration.Tests.csproj --no-build --verbosity normal
         ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
