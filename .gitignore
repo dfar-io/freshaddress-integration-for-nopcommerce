@@ -351,3 +351,4 @@ MigrationBackup/
 
 # Code coverage file
 Tests/coverage.opencover.xml
+Tests/coverage.json
