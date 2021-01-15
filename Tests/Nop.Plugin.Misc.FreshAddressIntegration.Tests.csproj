@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.msbuild" Version="3.0.0">
+    <PackageReference Include="coverlet.msbuild" Version="2.9.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -15,11 +15,12 @@
     <PackageReference Include="Moq" Version="4.15.2" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Source\Nop.Plugin.Misc.FreshAddressIntegration.csproj" />
+    <ProjectReference Include="..\..\..\Tests\Nop.Tests\Nop.Tests.csproj" />
   </ItemGroup>
 
 </Project>
