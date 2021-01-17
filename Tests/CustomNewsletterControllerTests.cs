@@ -67,6 +67,12 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
         }
 
         [Test]
+        public void Initializes()
+        {
+            _controller.Should().BeOfType<CustomNewsletterController>();
+        }
+
+        [Test]
         public void Reject_Invalid_Email()
         {
             _controller.SubscribeNewsletter("abc", true).Should().BeEquivalentTo(
