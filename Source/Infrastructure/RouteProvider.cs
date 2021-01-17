@@ -8,9 +8,11 @@ using Nop.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Nop.Plugin.Misc.FreshAddressIntegration.Infrastructure
 {
+    [ExcludeFromCodeCoverage]
     public class RouteProvider : IRouteProvider
     {
         public int Priority

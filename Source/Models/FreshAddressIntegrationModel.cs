@@ -1,5 +1,8 @@
-﻿namespace Nop.Plugin.Misc.FreshAddressIntegration.Models
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Nop.Plugin.Misc.FreshAddressIntegration.Models
 {
+    [ExcludeFromCodeCoverage]
     public class FreshAddressIntegrationModel
     {
         public string CompanyId { get; set; }

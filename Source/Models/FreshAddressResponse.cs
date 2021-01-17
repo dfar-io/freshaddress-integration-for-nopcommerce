@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
 
 namespace Nop.Plugin.Misc.FreshAddressIntegration.Models
 {
+    [ExcludeFromCodeCoverage]
     public class FreshAddressResponse
     {
         [JsonProperty(PropertyName = "EMAIL")]

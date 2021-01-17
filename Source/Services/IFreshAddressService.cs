@@ -1,5 +1,4 @@
 ﻿using Nop.Plugin.Misc.FreshAddressIntegration.Models;
-using System.Threading.Tasks;
 
 namespace Nop.Plugin.Misc.FreshAddressIntegration.Services
 {
