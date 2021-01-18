@@ -1,3 +1,7 @@
+using System;
+using System.Configuration;
+using System.Net.Http;
+using FluentAssertions;
 using Moq;
 using Nop.Core.Domain.Configuration;
 using Nop.Plugin.Misc.FreshAddressIntegration.Services;
@@ -33,6 +37,13 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
         public void Loads_Settings_On_Initialization()
         {
             _settingService.Verify(x => x.GetSetting(It.IsAny<string>(), 0, false), Times.AtLeastOnce);
+        }
+
+        [Test]
+        public void Validate_Email_Throws_Exception()
+        {
+            Action act = () => _service.ValidateEmail("a@a.com");
+            act.Should().Throw<HttpRequestException>();
         }
     }
 }
