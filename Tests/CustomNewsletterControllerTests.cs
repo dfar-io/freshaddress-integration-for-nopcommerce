@@ -1,3 +1,5 @@
+using System;
+using System.Net.Http;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -23,7 +25,10 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
 
         private const string InvalidEmail = "Invalid email.";
         private const string SubscribeEmailSent = "Subscribe email sent.";
+        private const string UnsubscribeEmailSent = "Unsubscribe email sent.";
         private const string ExistingEmail = "b@b.com";
+        private const string FailingEmail = "d@d.it";
+        private const string ExceptionEmail = "exception@d.it";
 
         [SetUp]
         public void Setup()
@@ -33,6 +38,8 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
                                .Returns(InvalidEmail);
             localizationService.Setup(s => s.GetResource("Newsletter.SubscribeEmailSent"))
                                .Returns(SubscribeEmailSent);
+            localizationService.Setup(s => s.GetResource("Newsletter.UnsubscribeEmailSent"))
+                               .Returns(UnsubscribeEmailSent);
 
             var workContext = new Mock<IWorkContext>();
             workContext.SetupGet(c => c.WorkingLanguage)
@@ -54,6 +61,20 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
                                        Finding = "V"
                                    }
                                );
+            freshAddressService.Setup(s => s.ValidateEmail(FailingEmail))
+                               .Returns(
+                                   new FreshAddressResponse() {
+                                       Finding = "A",
+                                       ErrorResponse = "failure"
+                                   }
+                               );
+            freshAddressService.Setup(s => s.ValidateEmail(ExceptionEmail))
+                               .Returns(
+                                   new FreshAddressResponse() {
+                                       Finding = "A",
+                                       ErrorResponse = "failure"
+                                   }
+                               );
 
             _controller = new CustomNewsletterController(
                 localizationService.Object,
@@ -64,12 +85,6 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
                 new Mock<ILogger>().Object,
                 freshAddressService.Object
             );
-        }
-
-        [Test]
-        public void Initializes()
-        {
-            _controller.Should().BeOfType<CustomNewsletterController>();
         }
 
         [Test]
@@ -94,6 +109,29 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
             _controller.SubscribeNewsletter(ExistingEmail, true).Should().BeEquivalentTo(
                 new JsonResult(new { Success = true, Result = SubscribeEmailSent })
             );
+        }
+
+        [Test]
+        public void Send_Unsubscribe_Email()
+        {
+            _controller.SubscribeNewsletter(ExistingEmail, false).Should().BeEquivalentTo(
+                new JsonResult(new { Success = true, Result = UnsubscribeEmailSent })
+            );
+        }
+
+        [Test]
+        public void Fail_Submission_From_FreshAddress()
+        {
+            _controller.SubscribeNewsletter(FailingEmail, true).Should().BeEquivalentTo(
+                new JsonResult(new { Success = false, Result = "failure" })
+            );
+        }
+
+        [Test]
+        public void Catches_Exception()
+        {
+            Action act = () => _controller.SubscribeNewsletter(ExceptionEmail, true);
+            act.Should().NotThrow<Exception>();
         }
     }
 }
