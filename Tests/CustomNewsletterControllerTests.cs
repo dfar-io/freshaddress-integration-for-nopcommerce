@@ -1,27 +1,26 @@
 using System;
-using System.Net.Http;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Nop.Core;
-using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Stores;
 using Nop.Plugin.Misc.FreshAddressIntegration.Controllers;
 using Nop.Plugin.Misc.FreshAddressIntegration.Models;
-using Nop.Plugin.Misc.FreshAddressIntegration.Services;
-using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using NUnit.Framework;
+using Nop.Plugin.Misc.FreshAddressIntegration.Services;
+using System.Net.Http;
 
 namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
 {
     public class CustomNewsletterControllerTests
     {
         private CustomNewsletterController _controller;
+        private Mock<ILogger> _logger = new Mock<ILogger>();
 
         private const string InvalidEmail = "Invalid email.";
         private const string SubscribeEmailSent = "Subscribe email sent.";
@@ -69,12 +68,7 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
                                    }
                                );
             freshAddressService.Setup(s => s.ValidateEmail(ExceptionEmail))
-                               .Returns(
-                                   new FreshAddressResponse() {
-                                       Finding = "A",
-                                       ErrorResponse = "failure"
-                                   }
-                               );
+                               .Throws(new HttpRequestException());
 
             _controller = new CustomNewsletterController(
                 localizationService.Object,
@@ -82,7 +76,7 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
                 newsletterSubscriptionService.Object,
                 new Mock<IWorkflowMessageService>().Object,
                 storeContext.Object,
-                new Mock<ILogger>().Object,
+                _logger.Object,
                 freshAddressService.Object
             );
         }
@@ -128,10 +122,11 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
         }
 
         [Test]
-        public void Catches_Exception()
+        public void Catches_ValidExceptions_And_Logs()
         {
             Action act = () => _controller.SubscribeNewsletter(ExceptionEmail, true);
             act.Should().NotThrow<Exception>();
+            _logger.Verify(x => x.Error(It.IsAny<string>(), null, null), Times.Once);
         }
     }
 }
