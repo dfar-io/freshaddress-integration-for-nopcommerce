@@ -14,13 +14,14 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
     public class FreshAddressServiceTests
     {
         private IFreshAddressService _service;
+        private IFreshAddressService _serviceInvalid;
 
-        private Mock<ISettingService> _settingService;
+        private Mock<ISettingService> _settingService = new Mock<ISettingService>();
+        private Mock<ISettingService> _settingServiceInvalid = new Mock<ISettingService>();
 
         [SetUp]
         public void Setup()
         {
-            _settingService = new Mock<ISettingService>();
             _settingService.Setup(s => s.GetSetting(It.IsAny<string>(), 0, false))
                            .Returns(new Setting()
                            {
@@ -31,6 +32,10 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
                 new Mock<ILogger>().Object,
                 _settingService.Object
             );
+            _serviceInvalid = new FreshAddressService(
+                new Mock<ILogger>().Object,
+                _settingServiceInvalid.Object
+            );
         }
 
         [Test]
@@ -40,7 +45,14 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
         }
 
         [Test]
-        public void Validate_Email_Throws_Exception()
+        public void Validate_Email_Throws_ConfigException()
+        {
+            Action act = () => _serviceInvalid.ValidateEmail("a@a.com");
+            act.Should().Throw<ConfigurationErrorsException>();
+        }
+
+        [Test]
+        public void Validate_Email_Throws_HttpException()
         {
             Action act = () => _service.ValidateEmail("a@a.com");
             act.Should().Throw<HttpRequestException>();
