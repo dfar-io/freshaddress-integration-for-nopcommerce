@@ -15,6 +15,7 @@ using NUnit.Framework;
 using Nop.Plugin.Misc.FreshAddressIntegration.Services;
 using System.Net.Http;
 using Nop.Services.Configuration;
+using System.Net;
 
 namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
 {
@@ -54,7 +55,22 @@ namespace Nop.Plugin.Misc.FreshAddressIntegration.Tests
             _controller.Configure(model).Should().BeOfType<ViewResult>();
             
             _settingService.Verify(s => s.GetSetting(It.IsAny<string>(), 0, false), Times.AtLeastOnce);
-            _notificationService.Verify(s => s.SuccessNotification(It.IsAny<string>(), true), Times.AtLeastOnce);
+            _notificationService.Verify(s => s.SuccessNotification(It.IsAny<string>(), true), Times.Once);
+        }
+
+        [Test]
+        public void Return_To_Get_On_Error()
+        {
+            var model = new FreshAddressIntegrationModel()
+            {
+                CompanyId = "123",
+                ContractId = "123"
+            };
+            _controller.ModelState.AddModelError("SomeError", "MoreError");
+            _controller.Configure(model).Should().BeOfType<ViewResult>();
+            
+            _settingService.Verify(s => s.GetSetting(It.IsAny<string>(), 0, false), Times.AtLeastOnce);
+            _notificationService.Verify(s => s.SuccessNotification(It.IsAny<string>(), true), Times.Once);
         }
     }
 }
